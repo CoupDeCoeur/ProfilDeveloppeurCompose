@@ -27,4 +27,4 @@ Application Android développée avec Jetpack Compose représentant une fiche de
    Parce qu'ils acceptent des paramètres de données (`name`, `roleTitle`, etc.) ainsi qu'un `modifier: Modifier = Modifier`, ce qui leur permet d'être affichés avec différents jeux de données et dans divers contextes.
 
 ## Capture d'écran
-Lien vers la capture d'écran : "https://ibb.co/C3Z6C3t9"
+Lien vers la capture d'écran : "https://ibb.co/JRm49jbJ"

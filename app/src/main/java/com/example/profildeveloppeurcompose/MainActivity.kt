@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ProfilDeveloppeurComposeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ProfileDemoScreen(
+                    ProfileMainScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -38,49 +38,51 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//Écran principal
+// 1. Écran principal
 @Composable
-fun ProfileDemoScreen(modifier: Modifier = Modifier) {
+fun ProfileMainScreen(modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(16.dp)
     ) {
         DeveloperProfileCard(
-            name = "Berry Romain",
-            roleTitle = "Développeur Android Compose",
+            name = "Thomas Bernard",
+            role = "Développeur Android junior",
+            description = "Je cherche un stage pour progresser en Kotlin, Compose et développement mobile Android.",
+            skills = listOf("• Kotlin", "• Compose", "• Git", "• Android Studio"),
+            contact = "Contact : thomas.bernard@example.com",
             availability = "Disponible pour un stage",
-            isAvailable = true,
-            onProfileClick = {
-                // Action vide
-            },
-            onContactClick = {
-                // Action de contact vide
-            },
+            actionText = "Contacter",
+            onCardClick = {},
+            onActionClick = {},
             modifier = Modifier.fillMaxWidth()
         )
     }
 }
 
-//La carte de profil globale
+// 2. La carte de profil globale
 @Composable
 fun DeveloperProfileCard(
     name: String,
-    roleTitle: String,
+    role: String,
+    description: String,
+    skills: List<String>,
+    contact: String,
     availability: String,
-    isAvailable: Boolean,
-    onProfileClick: () -> Unit,
-    onContactClick: () -> Unit,
+    actionText: String,
+    onCardClick: () -> Unit,
+    onActionClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier
             .clickable(
                 role = Role.Button,
-                onClick = onProfileClick
+                onClick = onCardClick
             )
             .semantics {
-                contentDescription = "Ouvrir le profil de $name"
+                contentDescription = "Profil de $name, $role"
             },
         shadowElevation = 4.dp
     ) {
@@ -89,33 +91,40 @@ fun DeveloperProfileCard(
         ) {
             ProfileHeader(
                 name = name,
-                roleTitle = roleTitle,
+                role = role,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             ProfileDescription(
-                text = "Étudiant en informatique qui aime le développement mobile natif et Jetpack Compose.",
-                modifier = Modifier.padding(bottom = 8.dp)
+                text = description,
+                modifier = Modifier.padding(bottom = 12.dp)
             )
-            ProfileAvailability(
+            ProfileSkillsSection(
+                skills = skills,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+            ProfileContactInfo(
+                contact = contact,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+            ProfileAvailabilityBox(
                 availability = availability,
-                isAvailable = isAvailable,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             ProfileActionButton(
-                text = "Contacter le développeur",
-                onClick = onContactClick,
+                text = actionText,
+                onClick = onActionClick,
                 modifier = Modifier.fillMaxWidth()
             )
         }
     }
 }
 
-//Composables unitaires réutilisables
+// 3. Composables unitaires réutilisables
 @Composable
-fun ProfileHeader(name: String, roleTitle: String, modifier: Modifier = Modifier) {
+fun ProfileHeader(name: String, role: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Text(text = name)
-        Text(text = roleTitle)
+        Text(text = role)
     }
 }
 
@@ -125,9 +134,30 @@ fun ProfileDescription(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProfileAvailability(availability: String, isAvailable: Boolean, modifier: Modifier = Modifier) {
-    val statusText = if (isAvailable) "Statut : $availability" else "Statut : Non disponible"
-    Text(text = statusText, modifier = modifier)
+fun ProfileSkillsSection(skills: List<String>, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Text(text = "Compétences")
+        for (skill in skills) {
+            Text(text = skill)
+        }
+    }
+}
+
+@Composable
+fun ProfileContactInfo(contact: String, modifier: Modifier = Modifier) {
+    Text(text = contact, modifier = modifier)
+}
+
+@Composable
+fun ProfileAvailabilityBox(availability: String, modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = availability,
+            modifier = Modifier.padding(12.dp)
+        )
+    }
 }
 
 @Composable
@@ -140,27 +170,43 @@ fun ProfileActionButton(text: String, onClick: () -> Unit, modifier: Modifier = 
     }
 }
 
-//Previews
-@Preview(showBackground = true)
+// 4. Previews
+@Preview(name = "AndroidJuniorProfilePreview", showBackground = true)
 @Composable
-fun ProfileAvailablePreview() {
+fun AndroidJuniorProfilePreview() {
     ProfilDeveloppeurComposeTheme {
-        ProfileDemoScreen()
+        Surface(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            DeveloperProfileCard(
+                name = "Romain Berry",
+                role = "Développeur Android junior",
+                description = "Je cherche un stage pour progresser en Kotlin, Compose et développement mobile Android.",
+                skills = listOf("• Kotlin", "• Compose", "• Git", "• Android Studio"),
+                contact = "Contact : romain.berry@example.com",
+                availability = "Disponible pour un stage",
+                actionText = "Contacter",
+                onCardClick = {},
+                onActionClick = {},
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "FullStackProfilePreview", showBackground = true)
 @Composable
-fun ProfileUnavailablePreview() {
+fun FullStackProfilePreview() {
     ProfilDeveloppeurComposeTheme {
-        Surface(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+        Surface(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             DeveloperProfileCard(
-                name = "Julie Dupont",
-                roleTitle = "Développeuse Full-Stack",
-                availability = "En poste",
-                isAvailable = false,
-                onProfileClick = {},
-                onContactClick = {},
+                name = "Camille Leroy",
+                role = "Développeuse full-stack",
+                description = "Développeuse polyvalente, je travaille sur des applications web et mobiles avec une attention particulière à la qualité du code.",
+                skills = listOf("• Kotlin", "• JavaScript", "• Backend", "• Git"),
+                contact = "Contact : camille.leroy@example.com",
+                availability = "Disponible en freelance",
+                actionText = "Voir le portfolio",
+                onCardClick = {},
+                onActionClick = {},
                 modifier = Modifier.fillMaxWidth()
             )
         }
